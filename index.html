@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OCR with Tesseract.js</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+  <h1 >OCR with Tesseract.js</h1>
+
+  
+
+  <label for="imageInput" class="custom-file-upload">
+    <span class="icon">&#128247;</span> Choose Image
+</label>
+<input type="file" id="imageInput" accept="image/*">
+
+
+  <button onclick="performOCR()" id="processButton">Perform OCR</button>
+ 
+
+  <div id="resultContainer">
+    <p id="ocrResult">
+
+    </p>
+</div>
+</div>
+  <script>
+    async function performOCR() {
+      const imageInput = document.getElementById('imageInput');
+      const ocrResultDiv = document.getElementById('ocrResult');
+
+      // Check if a file is selected
+      if (imageInput.files.length === 0) {
+        alert('Please select an image file.');
+        return;
+      }
+
+      // Get the selected file
+      const imageFile = imageInput.files[0];
+
+      // Prepare form data for sending the file to the server
+      const formData = new FormData();
+      formData.append('image', imageFile);
+
+      try {
+        // Send the image file to the server for OCR
+        const response = await fetch('/perform-ocr', {
+          method: 'POST',
+          body: formData
+        });
+
+        // Parse the JSON response
+        const result = await response.json();
+
+        // Display the OCR result
+        ocrResultDiv.innerText = result.text;
+      } catch (error) {
+        console.error('Error performing OCR:', error.message);
+      }
+    }
+  </script>
+<style>
+    body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background: #040303c7;;
+}
+h1{
+    color: white;
+}
+.container {
+    text-align: center;
+    border: solid;
+    padding: 90px;
+    width: 900px;
+    border-radius: 34px;
+    background: #121111ad;
+    border-color: #785578;
+}
+
+.custom-file-upload {
+    border: 2px solid #ccc;
+    display: inline-block;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.custom-file-upload .icon {
+    margin-right: 8px;
+}
+
+#imageInput {
+    display: none;
+}
+
+#processButton {
+    font-size: 18px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#resultContainer {
+    margin-top: 20px;
+    border: double;
+    border-color:#2d302d ;
+    
+}
+
+#ocrResult {
+    font-size: 18px;
+    white-space: pre-line;
+    color: ghostwhite;
+}
+
+</style>
+</body>
+</html>
